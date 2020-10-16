@@ -14,6 +14,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	
 	analyzeCommand := commands.AnalyzeSentence {
 		Sentence: m.Content,
+		Session: s,
+		Message: m,
 	}
 	analyzeCommand.Execute()
 }
