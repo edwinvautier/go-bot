@@ -3,15 +3,12 @@ FROM golang:1.15-alpine
 
 # ENV GO111MODULE=on
 
-# Add Maintainer info
-LABEL maintainer="Jason Gauvin <contact.jason.gauvin@gmail.com>"
-
 # Install git.
 # Git is required for fetching the dependencies.
 RUN apk update && apk add --no-cache git
 
 # Set the current working directory inside the container
-WORKDIR /go/src/gitlab.com/nr-eng/go-auth/api
+WORKDIR /go/src/gitlab.com/edwinvautier/go-auth/api
 
 # Copy the source from the current directory to the working Directory inside the container
 COPY . .
