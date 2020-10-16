@@ -19,7 +19,6 @@ services:
       - DB_NAME=db
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DOMAIN=localhost
   postgres:
     image: postgres:latest
     environment:
