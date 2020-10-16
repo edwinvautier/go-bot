@@ -1,18 +1,17 @@
 package wit
 
 import (
-	"encoding/json"
 	witai "github.com/wit-ai/wit-go"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"github.com/mitchellh/mapstructure"
 )
 
-func AnalyzeSentence(sentence string) {
+func AnalyzeSentence(sentence string) Analysis {
 	witToken, tokenExist := os.LookupEnv("WIT_TOKEN")
 	if !tokenExist {
 		log.Error("Missing environment variable WIT_TOKEN")
-		return
+		return Analysis{}
 	}
 	client := witai.NewClient(witToken)
 
@@ -22,18 +21,17 @@ func AnalyzeSentence(sentence string) {
 
 	if err != nil {
 		log.Error("Error while parsing request: ", err)
-		return
+		return Analysis{}
 	}
-
+	
 	var analysis Analysis
-	data, _ := json.MarshalIndent(msg.Entities, "", " ")
-	log.Info(string(data))
 	mapstructure.Decode(msg.Entities, &analysis)
-	log.Info(analysis)
+
+	return analysis
 }
 
 type Analysis struct {
-	Intents 	[]Entity	`json:"intent"`
+	Intent 	[]Intent		`json:"intent"`
 	Location	[]Entity	`json:"location"`
 }
 
