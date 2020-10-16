@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/edwinvautier/go-bot/commands"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -10,13 +11,9 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	// If the message is "ping" reply with "Pong!"
-	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
+	
+	analyzeCommand := commands.AnalyzeSentence {
+		Sentence: m.Content,
 	}
-
-	// If the message is "pong" reply with "Ping!"
-	if m.Content == "pong" {
-		s.ChannelMessageSend(m.ChannelID, "Ping!")
-	}
+	analyzeCommand.Execute()
 }
