@@ -1,11 +1,11 @@
 package conf
 
-import "fmt"
+import log "github.com/sirupsen/logrus"
 
 // MakeMigrations auto migrate the passed models.
 func MakeMigrations() {
 	if err := Db.Debug().AutoMigrate(); err != nil {
-		fmt.Printf("Could not make migrations: %s\n", err)
+		log.Error("Could not make migrations")
 		return
 	}
 	return

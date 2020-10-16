@@ -2,9 +2,9 @@ package conf
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
 type DbConfig struct {
@@ -22,11 +22,11 @@ var Db *gorm.DB
 func InitializeDb(dbHost string, username string, dbName string, port int, password string) {
 	dsn := fmt.Sprintf("host=%s user=%s dbname=%s port=%d password=%s sslmode=disable", dbHost, username, dbName, port, password) //Build connection string
 	if conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{}); err != nil {
-		log.Fatalf("Could not connect to database: %s\n", err)
+		log.Error("Could not connect to database")
 		return
 	} else {
 		Db = conn
-		fmt.Printf("We are connected to database: %v\n", Db)
+		log.Info("We are connected to database")
 	}
 	return
 }
