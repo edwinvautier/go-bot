@@ -1,15 +1,15 @@
 package discord
 
 import (
-	"github.com/edwinvautier/go-bot/handlers"
 	"github.com/bwmarrin/discordgo"
+	"github.com/edwinvautier/go-bot/handlers"
 	log "github.com/sirupsen/logrus"
 	"os"
 )
 
-func InitializeBot() (*discordgo.Session, error){
+func InitializeBot() (*discordgo.Session, error) {
 	discordToken := os.Getenv("TOKEN")
-	
+
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + discordToken)
 	if err != nil {
