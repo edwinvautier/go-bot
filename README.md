@@ -12,6 +12,9 @@ Made with :
 
 ## Setup
 
+First you need to created your `.env` file (you can use the .env.dist file).
+The `TOKEN` variable is the discord bot token. It's needed in order to make the bot work.
+
 ![](assets/build.png)
 
 ---
