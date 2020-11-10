@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/wit"
 	"github.com/edwinvautier/go-bot/commands"
@@ -25,8 +26,17 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Sentence: sentence,
 	}
 	analysis := analyzeCommand.Execute().(*wit.Analysis)
+	fmt.Printf("Anaylysis:", analysis)
 
-	if err := commands.Dispatch(analysis, s, m); err != nil {
+	cmd, err := commands.Build(analysis, s, m)
+
+	if err != nil {
 		log.Error(err)
+	}
+	if cmd != nil {
+		err = cmd.Execute()
+		if err != nil {
+			log.Error(err)
+		}
 	}
 }
