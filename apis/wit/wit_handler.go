@@ -23,7 +23,6 @@ func AnalyzeSentence(sentence string) Analysis {
 		log.Error("Error while parsing request: ", err)
 		return Analysis{}
 	}
-	
 	var analysis Analysis
 	mapstructure.Decode(msg.Entities, &analysis)
 
@@ -31,8 +30,9 @@ func AnalyzeSentence(sentence string) Analysis {
 }
 
 type Analysis struct {
-	Intent 	[]Intent		`json:"intent"`
+	Intent 		[]Intent	`json:"intent"`
 	Location	[]Entity	`json:"location"`
+	Music		[]Entity	`json:"music"`
 }
 
 type Intent struct {

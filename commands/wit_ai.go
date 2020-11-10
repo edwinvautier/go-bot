@@ -13,8 +13,16 @@ type AnalyzeSentence struct {
 
 func (command AnalyzeSentence) Execute() {
 	analysis := wit.AnalyzeSentence(command.Sentence)
-	intentString := analysis.Intent[0].Value
-	locationString := analysis.Location[0].Value
 	
-	command.Session.ChannelMessageSend(command.Message.ChannelID, "Vous voulez " + intentString + " à " + locationString)
+	intentString := analysis.Intent[0].Value
+	var value string
+
+	if len(analysis.Location) != 0 {
+		value = analysis.Location[0].Value
+	} else if len(analysis.Music) != 0 {
+		value = analysis.Music[0].Value
+	}
+	
+	command.Session.ChannelMessageSend(command.Message.ChannelID, "You want : " + intentString + "\n value : " + value)
 }
+	
