@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	YService   *youtube.Service
 	maxResults = flag.Int64("max-results", 5, "Max YouTube results")
+	Yservice   *youtube.Service
 )
 
 func ClientInit() {
@@ -31,7 +31,7 @@ func ClientInit() {
 		log.Fatalf("Error creating new YouTube client: %v", err)
 	}
 
-	YService = service
+	Yservice = service
 }
 
 func SearchByKeywords(query string) *map[string]string {
@@ -41,14 +41,13 @@ func SearchByKeywords(query string) *map[string]string {
 	// Make the API call to YouTube.
 
 	//query := flag.String("query", "Google", "Search term")
-	call := YService.Search.List(parts).
+	call := Yservice.Search.List(parts).
 		Q(query).
 		MaxResults(*maxResults)
 	response, err := call.Do()
 	if err != nil {
 		return nil
 	}
-	// Group video, channel, and playlist results in separate lists.
 	videos := make(map[string]string)
 
 	// Iterate through each item and add it to the correct list.

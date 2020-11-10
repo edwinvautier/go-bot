@@ -1,14 +1,17 @@
-package commands
+package test
 
 import (
-	"fmt"
+	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/wit"
+	"github.com/edwinvautier/go-bot/commands"
 	"testing"
 )
 
-func TestDispatch(t *testing.T) {
+func TestCommandBuilder(t *testing.T) {
 	type args struct {
 		a *wit.Analysis
+		s *discordgo.Session
+		m *discordgo.MessageCreate
 	}
 	tests := []struct {
 		name    string
@@ -71,10 +74,9 @@ func TestDispatch(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			//if _, err := Build(tt.args.a); (err != nil) != tt.wantErr {
-			//	t.Errorf("Build() error = %v, wantErr %v", err, tt.wantErr)
-			//}
-			fmt.Println("Test fucked")
+			if _, err := commands.Build(tt.args.a, tt.args.s, tt.args.m); (err != nil) != tt.wantErr {
+				t.Errorf("Build() error = %v, wantErr %v", err, tt.wantErr)
+			}
 		})
 	}
 }

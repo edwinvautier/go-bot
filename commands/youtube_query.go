@@ -8,13 +8,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type QueryYoutubeVideo struct {
+type QueryYoutubeVideoCommand struct {
 	analysis *wit.Analysis
 	session  *discordgo.Session
 	message  *discordgo.MessageCreate
 }
 
-func (command QueryYoutubeVideo) Execute() error {
+func (command QueryYoutubeVideoCommand) Execute() error {
 	music := command.analysis.Music[0].Value
 	if len(music) != 0 {
 		log.Info("You asked for music : ", music)

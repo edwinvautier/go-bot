@@ -11,7 +11,7 @@ type AnalyzeSentence struct {
 }
 
 // Execute is the function implemented from the commandInterface
-func (command AnalyzeSentence) Execute() interface{} {
+func (command AnalyzeSentence) ExecuteWitCommand() interface{} {
 	analysis := wit.AnalyzeSentence(command.Sentence)
 	if nil == analysis {
 		log.Error("Could not retrieve analysis")

@@ -18,7 +18,7 @@ func Build(a *wit.Analysis, s *discordgo.Session, m *discordgo.MessageCreate) (C
 
 	switch intentString {
 	case "listen":
-		return QueryYoutubeVideo{analysis: a, session: s, message: m}, nil
+		return QueryYoutubeVideoCommand{analysis: a, session: s, message: m}, nil
 	case "meteo":
 		log.Info("You want the meteo")
 	default:
