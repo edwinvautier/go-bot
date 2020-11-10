@@ -17,6 +17,7 @@ The `DISCORD_TOKEN` variable is the discord bot token. It's needed in order to m
 
 You can get a token on the following URL : https://discord.com/developers/applications/ 
 
+We use wit.ai to understand natural language, a token is also needed as `WIT_TOKEN`
 
 ```sh
   docker-compose up --build
