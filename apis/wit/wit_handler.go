@@ -1,10 +1,10 @@
 package wit
 
 import (
-	witai "github.com/wit-ai/wit-go"
-	log "github.com/sirupsen/logrus"
-	"os"
 	"github.com/mitchellh/mapstructure"
+	log "github.com/sirupsen/logrus"
+	witai "github.com/wit-ai/wit-go"
+	"os"
 )
 
 func AnalyzeSentence(sentence string) *Analysis {
@@ -19,7 +19,6 @@ func AnalyzeSentence(sentence string) *Analysis {
 	msg, err := client.Parse(&witai.MessageRequest{
 		Query: sentence,
 	})
-
 	if err != nil {
 		log.Error("Error while parsing request: ", err)
 		return nil
@@ -27,10 +26,10 @@ func AnalyzeSentence(sentence string) *Analysis {
 
 	// Feed the struct with wit.ai response
 	var analysis Analysis
-	if err = mapstructure.Decode(msg.Entities, &analysis); err != nil {
+	err = mapstructure.Decode(msg.Entities, &analysis)
+	if err != nil {
 		return nil
 	}
-
 	return &analysis
 }
 
@@ -47,6 +46,6 @@ type Intent struct {
 
 type Entity struct {
 	Confidence	float64		`json:"confidence"`
-	Type		bool		`json:"type"`
+	Type		string		`json:"type"`
 	Value		string		`json:"value"`
 }
