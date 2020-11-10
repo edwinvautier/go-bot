@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"github.com/edwinvautier/go-bot/commands"
-	"github.com/edwinvautier/go-bot/apis/wit"
 	"github.com/bwmarrin/discordgo"
+	"github.com/edwinvautier/go-bot/apis/wit"
+	"github.com/edwinvautier/go-bot/commands"
 	log "github.com/sirupsen/logrus"
 	"strings"
 )
@@ -20,13 +20,13 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 	sentence := strings.Split(m.Content, "assistant,")[1]
-	
-	analyzeCommand := commands.AnalyzeSentence {
+
+	analyzeCommand := commands.AnalyzeSentence{
 		Sentence: sentence,
 	}
 	analysis := analyzeCommand.Execute().(*wit.Analysis)
-	
-	if err := commands.Dispatch(analysis); err != nil {
+
+	if err := commands.Dispatch(analysis, s, m); err != nil {
 		log.Error(err)
 	}
 }

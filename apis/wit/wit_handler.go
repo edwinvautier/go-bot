@@ -34,22 +34,22 @@ func AnalyzeSentence(sentence string) *Analysis {
 	return &analysis
 }
 
-// Analysis result 
+// Analysis result
 type Analysis struct {
-	Intent 		[]Intent	`json:"intent"`
-	Location	[]Entity	`json:"location"`
-	Music		[]Entity	`json:"music"`
+	Intent   []Intent `json:"intent"`
+	Location []Entity `json:"location"`
+	Music    []Entity `json:"music"`
 }
 
 // Intent is the struct we can decode from the wit ai API response to get intents
 type Intent struct {
-	Confidence 	float64		`json:"confidence"`
-	Value		string		`json:"value"`
+	Confidence float64 `json:"confidence"`
+	Value      string  `json:"value"`
 }
 
 // Entity is the struct we can decode from the wit ai API response to get entities such as location, music name, etc
 type Entity struct {
-	Confidence	float64		`json:"confidence"`
-	Type		string		`json:"type"`
-	Value		string		`json:"value"`
+	Confidence float64 `json:"confidence"`
+	Type       string  `json:"type"`
+	Value      string  `json:"value"`
 }

@@ -7,7 +7,7 @@ import (
 
 // AnalyzeSentence is the struct for our wit ai command
 type AnalyzeSentence struct {
-	Sentence 	string
+	Sentence string
 }
 
 // Execute is the function implemented from the commandInterface
