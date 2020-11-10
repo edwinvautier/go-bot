@@ -13,11 +13,15 @@ Made with :
 ## Setup
 
 First you need to created your `.env` file (you can use the .env.dist file).
-The `TOKEN` variable is the discord bot token. It's needed in order to make the bot work.
+The `DISCORD_TOKEN` variable is the discord bot token. It's needed in order to make the bot work.
 
 You can get a token on the following URL : https://discord.com/developers/applications/ 
 
-![](assets/build.png)
+We use wit.ai to understand natural language, a token is also needed as `WIT_TOKEN`
+
+```sh
+  docker-compose up --build
+```
 
 ---
 
