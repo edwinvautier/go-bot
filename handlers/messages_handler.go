@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/edwinvautier/go-bot/commands"
+	"github.com/edwinvautier/go-bot/apis/wit"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -14,8 +15,7 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	
 	analyzeCommand := commands.AnalyzeSentence {
 		Sentence: m.Content,
-		Session: s,
-		Message: m,
 	}
-	analyzeCommand.Execute()
+	analysis := analyzeCommand.Execute().(*wit.Analysis)
+	commands.Dispatch(analysis)
 }
