@@ -4,7 +4,7 @@
 
 A bot to interact with in natural language.
 
-Made with : 
+Made with :
 
 - [go](https://github.com/golang/go)
 - [dicordgo](https://github.com/bwmarrin/discordgo)
@@ -15,12 +15,20 @@ Made with :
 First you need to created your `.env` file (you can use the .env.dist file).
 The `DISCORD_TOKEN` variable is the discord bot token. It's needed in order to make the bot work.
 
-You can get a token on the following URL : https://discord.com/developers/applications/ 
+You can get a token by following [this link](https://discord.com/developers/applications/)
 
 We use wit.ai to understand natural language, a token is also needed as `WIT_TOKEN`
 
 ```sh
   docker-compose up --build
+```
+
+## Tests
+
+You can run tests suites by using the following command :
+
+```sh
+  go test -v ./<package-name>
 ```
 
 ---
@@ -34,7 +42,7 @@ We follow a [code of conduct](CODE_OF_CONDUCT.md), if you wish to contribute on 
 - You branch should have a name that reflects it's purpose.
 
 - It should use the same guidelines as [COMMIT_CONVENTIONS](COMMIT_CONVENTIONS.md) (`feat`, `fix`, `build`, `perf`, `docs`), followed by an underscore (`_`) and a very quick summary of the subject in [kebab case][1].
-       
+
     Example: `feat_add-image-tag-database-relation`.
 
 ### Pull requests (PR)
