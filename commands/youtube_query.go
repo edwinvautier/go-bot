@@ -22,8 +22,8 @@ func (command QueryYoutubeVideoCommand) Execute() error {
 		if nil == videos {
 			return errors.New("Could not find videos")
 		}
-		for id, _ := range *videos {
-			_, err := command.session.ChannelMessageSend(command.message.ChannelID, "https://youtu.be/"+id)
+		for _, v := range *videos {
+			_, err := command.session.ChannelMessageSend(command.message.ChannelID, "https://youtu.be/"+v.Id)
 			if err != nil {
 				return errors.New("Could not send message.")
 			}

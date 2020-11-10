@@ -34,7 +34,7 @@ func ClientInit() {
 	Yservice = service
 }
 
-func SearchByKeywords(query string) *map[string]string {
+func SearchByKeywords(query string) *[]Video {
 	var parts []string
 	parts = append(parts, "id")
 	parts = append(parts, "snippet")
@@ -48,15 +48,23 @@ func SearchByKeywords(query string) *map[string]string {
 	if err != nil {
 		return nil
 	}
-	videos := make(map[string]string)
-
+	var videos []Video
 	// Iterate through each item and add it to the correct list.
 	for _, item := range response.Items {
 		switch item.Id.Kind {
 		case "youtube#video":
-			videos[item.Id.VideoId] = item.Snippet.Title
+			video := Video{
+				Id:    item.Id.VideoId,
+				Title: item.Snippet.Title,
+			}
+			videos = append(videos, video)
 		}
 	}
 
 	return &videos
+}
+
+type Video struct {
+	Id    string
+	Title string
 }
