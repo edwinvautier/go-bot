@@ -4,6 +4,7 @@ import (
 	"github.com/edwinvautier/go-bot/commands"
 	"github.com/edwinvautier/go-bot/apis/wit"
 	"github.com/bwmarrin/discordgo"
+	log "github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -24,5 +25,8 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Sentence: sentence,
 	}
 	analysis := analyzeCommand.Execute().(*wit.Analysis)
-	commands.Dispatch(analysis)
+	
+	if err := commands.Dispatch(analysis); err != nil {
+		log.Error(err)
+	}
 }
