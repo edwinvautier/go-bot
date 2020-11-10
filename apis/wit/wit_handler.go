@@ -15,6 +15,7 @@ func AnalyzeSentence(sentence string) Analysis {
 	}
 	client := witai.NewClient(witToken)
 
+	// Ask the wit API to decode the user request
 	msg, err := client.Parse(&witai.MessageRequest{
 		Query: sentence,
 	})
@@ -23,6 +24,8 @@ func AnalyzeSentence(sentence string) Analysis {
 		log.Error("Error while parsing request: ", err)
 		return Analysis{}
 	}
+
+	// Feed the struct with wit.ai response
 	var analysis Analysis
 	mapstructure.Decode(msg.Entities, &analysis)
 

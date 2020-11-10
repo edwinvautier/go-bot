@@ -14,6 +14,7 @@ type AnalyzeSentence struct {
 func (command AnalyzeSentence) Execute() {
 	analysis := wit.AnalyzeSentence(command.Sentence)
 	
+	// Read informations from the analyzis interface returned by the wit command
 	intentString := analysis.Intent[0].Value
 	var value string
 
@@ -23,6 +24,6 @@ func (command AnalyzeSentence) Execute() {
 		value = analysis.Music[0].Value
 	}
 	
+	// Send a message to the user with the informations wit understood 
 	command.Session.ChannelMessageSend(command.Message.ChannelID, "You want : " + intentString + "\n value : " + value)
 }
-	
