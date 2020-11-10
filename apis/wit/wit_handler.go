@@ -7,11 +7,11 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-func AnalyzeSentence(sentence string) Analysis {
+func AnalyzeSentence(sentence string) *Analysis {
 	witToken, tokenExist := os.LookupEnv("WIT_TOKEN")
 	if !tokenExist {
 		log.Error("Missing environment variable WIT_TOKEN")
-		return Analysis{}
+		return nil
 	}
 	client := witai.NewClient(witToken)
 
@@ -22,14 +22,16 @@ func AnalyzeSentence(sentence string) Analysis {
 
 	if err != nil {
 		log.Error("Error while parsing request: ", err)
-		return Analysis{}
+		return nil
 	}
 
 	// Feed the struct with wit.ai response
 	var analysis Analysis
-	mapstructure.Decode(msg.Entities, &analysis)
+	if err = mapstructure.Decode(msg.Entities, &analysis); err != nil {
+		return nil
+	}
 
-	return analysis
+	return &analysis
 }
 
 type Analysis struct {

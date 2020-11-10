@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/wit"
+	log "github.com/sirupsen/logrus"
 )
 
 type AnalyzeSentence struct {
@@ -13,6 +14,9 @@ type AnalyzeSentence struct {
 
 func (command AnalyzeSentence) Execute() {
 	analysis := wit.AnalyzeSentence(command.Sentence)
+	if nil == analysis {
+		log.Error("Could not retrieve analysis")
+	}
 	
 	// Read informations from the analyzis interface returned by the wit command
 	intentString := analysis.Intent[0].Value
@@ -25,5 +29,9 @@ func (command AnalyzeSentence) Execute() {
 	}
 	
 	// Send a message to the user with the informations wit understood 
-	command.Session.ChannelMessageSend(command.Message.ChannelID, "You want : " + intentString + "\n value : " + value)
+	_, err := command.Session.ChannelMessageSend(command.Message.ChannelID, "You want : " + intentString + "\n value : " + value)
+	if err != nil {
+		log.Error("Error while sending message: ", err)
+
+	}
 }
