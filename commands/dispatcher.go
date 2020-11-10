@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Dispatch a command depending on the analysis result we give
 func Dispatch(a *wit.Analysis) {
 	// Read the intent from the wit analysis result
 	intentString := a.Intent[0].Value
