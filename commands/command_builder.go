@@ -22,6 +22,7 @@ func Build(a *wit.Analysis, s *discordgo.Session, m *discordgo.MessageCreate) (C
 	case "meteo":
 		log.Info("You want the meteo")
 	default:
+		log.Error("unknown command: ", intentString)
 		return nil, errors.New("Unknown command " + intentString)
 	}
 

@@ -15,6 +15,8 @@ var (
 	Yservice   *youtube.Service
 )
 
+// ClientInit initialize a youtube service.
+// Assign Yservice global variable to fetched service
 func ClientInit() {
 	youtubeToken, exist := os.LookupEnv("YOUTUBE_TOKEN")
 	if !exist {
@@ -34,7 +36,10 @@ func ClientInit() {
 	Yservice = service
 }
 
-func SearchByKeywords(query string) *[]Video {
+// SearchByKeyword let you search a youtube video from keywords.
+// Takes a keyword as argument.
+// Return a pointer of an Video array.
+func SearchByKeywords(keyword string) *[]Video {
 	var parts []string
 	parts = append(parts, "id")
 	parts = append(parts, "snippet")
@@ -42,7 +47,7 @@ func SearchByKeywords(query string) *[]Video {
 
 	//query := flag.String("query", "Google", "Search term")
 	call := Yservice.Search.List(parts).
-		Q(query).
+		Q(keyword).
 		MaxResults(*maxResults)
 	response, err := call.Do()
 	if err != nil {
@@ -64,6 +69,7 @@ func SearchByKeywords(query string) *[]Video {
 	return &videos
 }
 
+// Video object to reflect the data gathered from the api.
 type Video struct {
 	Id    string
 	Title string
