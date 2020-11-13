@@ -25,15 +25,22 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Sentence: sentence,
 	}
 	analysis := analyzeCommand.ExecuteWitCommand().(*wit.Analysis)
-	if analysis == nil {
+	log.WithFields( log.Fields{ "confidence": analysis.Intent[0].Confidence}).Info(analysis.Intent[0].Value)
+	if analysis == nil || len(analysis.Intent) < 1  {
 		s.ChannelMessageSend(m.ChannelID, "Pardon, je n'ai pas compris.")
+		return
+	}
+
+	// Check the confidence 
+	if analysis.Intent[0].Confidence < 0.9 {
+		askGoogle(s, m)
 		return
 	}
 	cmd, err := commands.Build(analysis, s, m)
 	
 	if err != nil {
 		log.Error(err)
-		s.ChannelMessageSend(m.ChannelID, "Echec lors de l'exécution de votre commande.")
+		s.ChannelMessageSend(m.ChannelID, "Je n'ai pas réussi à trouver ce qu'il vous fallait.")
 		return
 	}
 	if cmd == nil {
@@ -41,8 +48,18 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	
 	if err = cmd.Execute(); err != nil {
-		s.ChannelMessageSend(m.ChannelID, "Echec lors de l'exécution de votre commande.")
-		log.Error(err)
+		askGoogle(s, m)
 		return
 	}
+}
+
+func askGoogle(s *discordgo.Session, m *discordgo.MessageCreate) {
+	s.ChannelMessageSend(m.ChannelID, "Je n'ai pas très bien compris, je demande a google.")
+		googleCmd := commands.QueryGoogleCommand{Connector: s, Message: m}
+		err := googleCmd.Execute()
+
+		if err != nil {
+			log.Error(err)
+			s.ChannelMessageSend(m.ChannelID, "Pardon, même google m'a abandonné.")
+		}
 }

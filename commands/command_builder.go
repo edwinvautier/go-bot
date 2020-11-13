@@ -6,7 +6,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/wit"
 	"github.com/edwinvautier/go-bot/connectors"
-	log "github.com/sirupsen/logrus"
+	// log "github.com/sirupsen/logrus"
 )
 
 // Build a command depending on the analysis result we give
@@ -21,11 +21,10 @@ func Build(a *wit.Analysis, s connectors.Discord, m *discordgo.MessageCreate) (C
 	switch intentString {
 	case "listen":
 		return QueryYoutubeVideoCommand{analysis: a, connector: s, message: m}, nil
-	case "meteo":
-		log.Info("You want the meteo")
+	// case "meteo":
+	// 	log.Info("You want the meteo")
 	default:
-		log.Error("unknown command: ", intentString)
-		return nil, errors.New("Unknown command " + intentString)
+		return QueryGoogleCommand{Connector: s, Message: m}, nil
 	}
 
 	return nil, nil
