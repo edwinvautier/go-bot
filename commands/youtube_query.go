@@ -26,7 +26,6 @@ func (command QueryYoutubeVideoCommand) Execute() error {
 		return errors.New("No music value specified")
 	}
 
-	log.Info("You asked for music : ", music)
 	videos := youtube.SearchByKeywords(music)
 	if nil == videos {
 		return errors.New("Could not find videos")
