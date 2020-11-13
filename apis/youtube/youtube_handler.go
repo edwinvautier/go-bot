@@ -11,10 +11,12 @@ import (
 )
 
 var (
-	YService   *youtube.Service
 	maxResults = flag.Int64("max-results", 5, "Max YouTube results")
+	Yservice   *youtube.Service
 )
 
+// ClientInit initialize a youtube service.
+// Assign Yservice global variable to fetched service
 func ClientInit() {
 	youtubeToken, exist := os.LookupEnv("YOUTUBE_TOKEN")
 	if !exist {
@@ -31,33 +33,44 @@ func ClientInit() {
 		log.Fatalf("Error creating new YouTube client: %v", err)
 	}
 
-	YService = service
+	Yservice = service
 }
 
-func SearchByKeywords(query string) *map[string]string {
+// SearchByKeyword let you search a youtube video from keywords.
+// Takes a keyword as argument.
+// Return a pointer of an Video array.
+func SearchByKeywords(keyword string) *[]Video {
 	var parts []string
 	parts = append(parts, "id")
 	parts = append(parts, "snippet")
 	// Make the API call to YouTube.
 
 	//query := flag.String("query", "Google", "Search term")
-	call := YService.Search.List(parts).
-		Q(query).
+	call := Yservice.Search.List(parts).
+		Q(keyword).
 		MaxResults(*maxResults)
 	response, err := call.Do()
 	if err != nil {
 		return nil
 	}
-	// Group video, channel, and playlist results in separate lists.
-	videos := make(map[string]string)
-
+	var videos []Video
 	// Iterate through each item and add it to the correct list.
 	for _, item := range response.Items {
 		switch item.Id.Kind {
 		case "youtube#video":
-			videos[item.Id.VideoId] = item.Snippet.Title
+			video := Video{
+				Id:    item.Id.VideoId,
+				Title: item.Snippet.Title,
+			}
+			videos = append(videos, video)
 		}
 	}
 
 	return &videos
+}
+
+// Video object to reflect the data gathered from the api.
+type Video struct {
+	Id    string
+	Title string
 }
