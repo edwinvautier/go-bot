@@ -2,17 +2,16 @@ package wit
 
 import (
 	"github.com/mitchellh/mapstructure"
-	log "github.com/sirupsen/logrus"
 	witai "github.com/wit-ai/wit-go"
 	"os"
+	"errors"
 )
 
 // AnalyzeSentence takes a string and uses wit ai API to detect intents inside
-func AnalyzeSentence(sentence string) *Analysis {
+func AnalyzeSentence(sentence string) (*Analysis, error) {
 	witToken, tokenExist := os.LookupEnv("WIT_TOKEN")
 	if !tokenExist {
-		log.Error("Missing environment variable WIT_TOKEN")
-		return nil
+		return nil, errors.New("Missing environment variable WIT_TOKEN")
 	}
 	client := witai.NewClient(witToken)
 
@@ -20,18 +19,17 @@ func AnalyzeSentence(sentence string) *Analysis {
 	msg, err := client.Parse(&witai.MessageRequest{
 		Query: sentence,
 	})
-	if err != nil {
-		log.Error("Error while parsing request: ", err)
-		return nil
+	if err != nil {	
+		return nil, err
 	}
 
 	// Feed the struct with wit.ai response
 	var analysis Analysis
 	err = mapstructure.Decode(msg.Entities, &analysis)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return &analysis
+	return &analysis, nil
 }
 
 // Analysis result

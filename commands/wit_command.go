@@ -10,11 +10,12 @@ type AnalyzeSentence struct {
 	Sentence string
 }
 
-// Execute is the function implemented from the commandInterface
+// ExecuteWitCommand is the function that calls wit ai API to understand sentence
 func (command AnalyzeSentence) ExecuteWitCommand() interface{} {
-	analysis := wit.AnalyzeSentence(command.Sentence)
-	if nil == analysis {
+	analysis, err := wit.AnalyzeSentence(command.Sentence)
+	if err != nil {
 		log.Error("Could not retrieve analysis")
+		return nil
 	}
 
 	return analysis

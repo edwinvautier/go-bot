@@ -25,16 +25,24 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Sentence: sentence,
 	}
 	analysis := analyzeCommand.ExecuteWitCommand().(*wit.Analysis)
-
+	if analysis == nil {
+		s.ChannelMessageSend(m.ChannelID, "Pardon, je n'ai pas compris.")
+		return
+	}
 	cmd, err := commands.Build(analysis, s, m)
-
+	
 	if err != nil {
 		log.Error(err)
+		s.ChannelMessageSend(m.ChannelID, "Echec lors de l'exécution de votre commande.")
+		return
 	}
-	if cmd != nil {
-		err = cmd.Execute()
-		if err != nil {
-			log.Error(err)
-		}
+	if cmd == nil {
+		return
+	}
+	
+	if err = cmd.Execute(); err != nil {
+		s.ChannelMessageSend(m.ChannelID, "Echec lors de l'exécution de votre commande.")
+		log.Error(err)
+		return
 	}
 }
