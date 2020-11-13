@@ -17,11 +17,15 @@ type QueryGoogleCommand struct {
 
 // Execute is the function we use for the google search command
 func (command QueryGoogleCommand) Execute() error {
+	
+	// Call google for our search results
 	results, err := google.Search(strings.Split(command.Message.Content, "assistant,")[1])
 	if err != nil {
 		return errors.New("Search failed")
 	}
 
+
+	// Loop inside results and display only the URL inside discord
 	command.Connector.ChannelMessageSend(command.Message.ChannelID, "Voilà ce que j'ai trouvé : ")
 	count := 1
 	for _, result := range results {

@@ -33,6 +33,12 @@ You can run tests suites by using the following command :
 
 ---
 
+## Usage
+
+Once the bot is invited to discord, you can talk to it simply by prefixing your messages with : `assistant,`
+
+---
+
 ## Contributing
 
 We follow a [code of conduct](CODE_OF_CONDUCT.md), if you wish to contribute on this project, we strongly advise you to read it.
