@@ -69,7 +69,7 @@ func TestCommandBuilder(t *testing.T) {
 				s: &discordMock,
 				m: &discordMessageCreate,
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name: "no intent",
