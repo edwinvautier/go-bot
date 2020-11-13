@@ -4,14 +4,28 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/wit"
 	"github.com/edwinvautier/go-bot/commands"
+	"github.com/edwinvautier/go-bot/connectors"
 	"testing"
 )
 
+type discordSessionMock struct {}
+
+func (session *discordSessionMock) ChannelMessageSend(channelID string, message string) (*discordgo.Message, error) {
+	return nil, nil
+}
 func TestCommandBuilder(t *testing.T) {
 	type args struct {
 		a *wit.Analysis
-		s *discordgo.Session
+		s connectors.Discord
 		m *discordgo.MessageCreate
+	}
+
+	discordMock := discordSessionMock{}
+	discordMessage := discordgo.Message {
+		ChannelID: "1",
+	}
+	discordMessageCreate := discordgo.MessageCreate {
+		&discordMessage,
 	}
 	tests := []struct {
 		name    string
@@ -26,6 +40,8 @@ func TestCommandBuilder(t *testing.T) {
 						Value: "listen",
 					}},
 				},
+				s: &discordMock,
+				m: &discordMessageCreate,
 			},
 			wantErr: false,
 		},
@@ -37,6 +53,8 @@ func TestCommandBuilder(t *testing.T) {
 						Value: "meteo",
 					}},
 				},
+				s: &discordMock,
+				m: &discordMessageCreate,
 			},
 			wantErr: false,
 		},
@@ -48,6 +66,8 @@ func TestCommandBuilder(t *testing.T) {
 						Value: "ukulele",
 					}},
 				},
+				s: &discordMock,
+				m: &discordMessageCreate,
 			},
 			wantErr: true,
 		},
@@ -57,6 +77,8 @@ func TestCommandBuilder(t *testing.T) {
 				a: &wit.Analysis{
 					Intent: []wit.Intent{},
 				},
+				s: &discordMock,
+				m: &discordMessageCreate,
 			},
 			wantErr: true,
 		},
@@ -68,6 +90,8 @@ func TestCommandBuilder(t *testing.T) {
 						Value: "",
 					}},
 				},
+				s: &discordMock,
+				m: &discordMessageCreate,
 			},
 			wantErr: true,
 		},

@@ -4,15 +4,16 @@ import (
 	"errors"
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/wit"
+	"github.com/edwinvautier/go-bot/connectors"
 	"github.com/edwinvautier/go-bot/apis/youtube"
 	log "github.com/sirupsen/logrus"
 )
 
 // QueryYoutubeVideoCommand is the struct for our youtube query command
 type QueryYoutubeVideoCommand struct {
-	analysis *wit.Analysis
-	session  *discordgo.Session
-	message  *discordgo.MessageCreate
+	analysis 	*wit.Analysis
+	connector  	connectors.Discord
+	message  	*discordgo.MessageCreate
 }
 
 // Execute function of the youtube query command
@@ -31,7 +32,7 @@ func (command QueryYoutubeVideoCommand) Execute() error {
 		return errors.New("Could not find videos")
 	}
 	for _, v := range *videos {
-		_, err := command.session.ChannelMessageSend(command.message.ChannelID, "https://youtu.be/"+v.Id)
+		_, err := command.connector.ChannelMessageSend(command.message.ChannelID, "https://youtu.be/"+v.Id)
 		if err != nil {
 			log.Error("could not send message to channelId: ", command.message.ChannelID)
 			return errors.New("Could not send message")
