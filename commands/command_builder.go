@@ -9,11 +9,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// GenericCommand is the structure needed for every command.
+// All Commands implements it.
 type GenericCommand struct {
 	Analysis *wit.Analysis
-	Session connectors.Discord
-	Message *discordgo.MessageCreate
+	Session  connectors.Discord
+	Message  *discordgo.MessageCreate
 }
+
 // Build a command depending on the analysis result we give
 func (gc *GenericCommand) Build() (Command, error) {
 	if len(gc.Analysis.Intent) == 0 || gc.Analysis.Intent[0].Value == "" {

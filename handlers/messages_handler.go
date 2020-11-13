@@ -39,7 +39,7 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	gc := commands.GenericCommand{Analysis: analysis, Session: s, Message: m}
 	cmd, err := gc.Build()
-	log.Info("Error while building command: %v", err)
+	
 	if err != nil {
 		log.Error(err)
 		s.ChannelMessageSend(m.ChannelID, "Je n'ai pas réussi à trouver ce qu'il vous fallait.")

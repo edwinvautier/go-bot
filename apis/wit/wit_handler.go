@@ -1,10 +1,10 @@
 package wit
 
 import (
+	"errors"
 	"github.com/mitchellh/mapstructure"
 	witai "github.com/wit-ai/wit-go"
 	"os"
-	"errors"
 )
 
 // AnalyzeSentence takes a string and uses wit ai API to detect intents inside
@@ -19,7 +19,7 @@ func AnalyzeSentence(sentence string) (*Analysis, error) {
 	msg, err := client.Parse(&witai.MessageRequest{
 		Query: sentence,
 	})
-	if err != nil {	
+	if err != nil {
 		return nil, err
 	}
 

@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-type discordSessionMock struct {}
+type discordSessionMock struct{}
 
 func (session *discordSessionMock) ChannelMessageSend(channelID string, message string) (*discordgo.Message, error) {
 	return nil, nil
@@ -21,10 +21,10 @@ func TestCommandBuilder(t *testing.T) {
 	}
 
 	discordMock := discordSessionMock{}
-	discordMessage := discordgo.Message {
+	discordMessage := discordgo.Message{
 		ChannelID: "1",
 	}
-	discordMessageCreate := discordgo.MessageCreate {
+	discordMessageCreate := discordgo.MessageCreate{
 		&discordMessage,
 	}
 	tests := []struct {
