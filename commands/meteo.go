@@ -5,6 +5,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/meteo"
+	"github.com/edwinvautier/go-bot/connectors"
 
 	"github.com/edwinvautier/go-bot/apis/wit"
 	log "github.com/sirupsen/logrus"
@@ -12,10 +13,11 @@ import (
 )
 
 type GetWeather struct {
-	analysis *wit.Analysis
-	session  *discordgo.Session
-	message  *discordgo.MessageCreate
+	analysis  *wit.Analysis
+	connector connectors.Discord
+	message   *discordgo.MessageCreate
 }
+
 
 func (command GetWeather) Execute() error {
 	log.Info("GetWeather :", command.analysis)
@@ -24,11 +26,7 @@ func (command GetWeather) Execute() error {
 	location := command.analysis.Location
 	if len(location) == 0 {
 		// message à l'utilisateur
-		if command.message.Author.ID == command.session.State.User.ID {
-			return nil
-		}
-
-		command.session.ChannelMessageSend(command.message.ChannelID, "Je sais pas compris, merci de reformuler ta votre demande")
+		command.connector.ChannelMessageSend(command.message.ChannelID, "Je sais pas compris, merci de reformuler ta votre demande")
 		return errors.New("Could not retrieve location")
 	}
 
@@ -38,12 +36,10 @@ func (command GetWeather) Execute() error {
 	weatherParams := meteo.WeatherParams{Location: location[0].Value}
 
 	// Je renvoie un message
-	meteo.FindWheatherByCity(&weatherParams)
-	log.Info("channel", &command.session)
-	if command.message.Author.ID == command.session.State.User.ID {
-		return nil
-	}
-	command.session.ChannelMessageSend(command.message.ChannelID, "Voici la météo sur Moncul")
+	wd := meteo.FindWheatherByCity(&weatherParams)
+
+
+	command.connector.ChannelMessageSend(command.message.ChannelID, "Voici la météo sur Moncul")
 
 	// Potentiellement je renvoie des erreurs à plusieurs endroits
 	return nil

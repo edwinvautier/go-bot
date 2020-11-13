@@ -24,26 +24,6 @@ func GetKey() string {
 // URL is a constant that contains where to find the IP locale info
 const URL = "http://ip-api.com/json"
 
-// Data will hold the result of the query to get the IP
-// address of the caller.
-type Data struct {
-	Status      string  `json:"status"`
-	Country     string  `json:"country"`
-	CountryCode string  `json:"countryCode"`
-	Region      string  `json:"region"`
-	RegionName  string  `json:"regionName"`
-	City        string  `json:"city"`
-	Zip         string  `json:"zip"`
-	Lat         float64 `json:"lat"`
-	Lon         float64 `json:"lon"`
-	Timezone    string  `json:"timezone"`
-	ISP         string  `json:"isp"`
-	ORG         string  `json:"org"`
-	AS          string  `json:"as"`
-	Message     string  `json:"message"`
-	Query       string  `json:"query"`
-}
-
 // getLocation will get the location details for where this
 // application has been run from.
 func getLocation() (*Data, error) {
@@ -91,20 +71,53 @@ func hereHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // FindWheatherByCity take the return of the dispatcher and request the requested location.
-func FindWheatherByCity(wp *WeatherParams) {
+func FindWheatherByCity(wp *WeatherParams) *WeatherData {
 	var apiKey = GetKey()
 
 	log.Info("Recherche du temps")
 	w, err := owm.NewCurrent("C", "fr", apiKey) // Celsius (metric) with France output
 	if err != nil {
 		log.Fatalln(err)
+		return nil
 	}
-	weather := wp.Location
-	w.CurrentByName(weather)
-	return
+	err = w.CurrentByName(wp.Location)
+
+	weatherData := WeatherData{Wheater: &w.Weather}
+
+	return &weatherData
 }
 
 // WeatherParams result
 type WeatherParams struct {
 	Location string
+}
+
+type WeatherData struct {
+	Wheater *[]owm.Weather
+	Main *owm.Weather
+}
+
+func (wd *WeatherData) String() string {
+
+	return fmt.Sprintf("weather:%s", wd.Wheater)
+}
+
+// Data will hold the result of the query to get the IP
+// address of the caller.
+type Data struct {
+	Status      string  `json:"status"`
+	Country     string  `json:"country"`
+	CountryCode string  `json:"countryCode"`
+	Region      string  `json:"region"`
+	RegionName  string  `json:"regionName"`
+	City        string  `json:"city"`
+	Zip         string  `json:"zip"`
+	Lat         float64 `json:"lat"`
+	Lon         float64 `json:"lon"`
+	Timezone    string  `json:"timezone"`
+	ISP         string  `json:"isp"`
+	ORG         string  `json:"org"`
+	AS          string  `json:"as"`
+	Message     string  `json:"message"`
+	Query       string  `json:"query"`
 }

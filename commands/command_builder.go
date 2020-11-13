@@ -30,7 +30,7 @@ func (gc *GenericCommand) Build() (Command, error) {
 	case "listen":
 		return QueryYoutubeVideoCommand{gc: gc}, nil
 	case "meteo":
-		log.Info("You want the meteo")
+		return GetWeather{analysis: a, connector: s, message: m}, nil
 	default:
 		return QueryGoogleCommand{Connector: gc.Session, Message: gc.Message}, nil
 	}
