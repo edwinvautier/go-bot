@@ -2,6 +2,7 @@ package commands
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/meteo"
@@ -18,16 +19,19 @@ type GetWeather struct {
 	message   *discordgo.MessageCreate
 }
 
-
 func (command GetWeather) Execute() error {
-	log.Info("GetWeather :", command.analysis)
-	// Est ce que j'ai toutes les infos dont j'ai besoin dans analysis ?
-	// non -> j'envoie un message : ou ça ?
 	location := command.analysis.Location
+
 	if len(location) == 0 {
-		// message à l'utilisateur
-		command.connector.ChannelMessageSend(command.message.ChannelID, "Je sais pas compris, merci de reformuler ta votre demande")
-		return errors.New("Could not retrieve location")
+		wd, err := meteo.GetHereHandler()
+
+		if err != nil {
+			command.connector.ChannelMessageSend(command.message.ChannelID, "Je sais pas compris, vous n'exister pas")
+			return errors.New("Could not retrieve location")
+		}
+
+		command.connector.ChannelMessageSend(command.message.ChannelID, fmt.Sprintf("Voici la météo : %s", wd))
+		return nil
 	}
 
 	// oui je continue et je créé ma WeatherParams
@@ -37,9 +41,8 @@ func (command GetWeather) Execute() error {
 
 	// Je renvoie un message
 	wd := meteo.FindWheatherByCity(&weatherParams)
-
-
-	command.connector.ChannelMessageSend(command.message.ChannelID, "Voici la météo sur Moncul")
+	log.Info(wd)
+	command.connector.ChannelMessageSend(command.message.ChannelID, fmt.Sprintf("Voici la météo : %s", wd))
 
 	// Potentiellement je renvoie des erreurs à plusieurs endroits
 	return nil

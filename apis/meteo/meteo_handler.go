@@ -3,6 +3,7 @@ package meteo
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -12,6 +13,7 @@ import (
 	owm "github.com/briandowns/openweathermap"
 )
 
+// GetKey get OWN_API_KEY
 func GetKey() string {
 	apiKey, tokenExist := os.LookupEnv("OWN_API_KEY")
 	if !tokenExist {
@@ -24,24 +26,26 @@ func GetKey() string {
 // URL is a constant that contains where to find the IP locale info
 const URL = "http://ip-api.com/json"
 
-// getLocation will get the location details for where this
-// application has been run from.
-func getLocation() (*Data, error) {
+// GetLocation will get the location details for where this application has been run from.
+func GetLocation() (*Data, error) {
 	response, err := http.Get(URL)
 	if err != nil {
 		return nil, err
 	}
 	defer response.Body.Close()
-	r := &Data{}
-	if err = json.NewDecoder(response.Body).Decode(&r); err != nil {
+	result, err := ioutil.ReadAll(response.Body)
+	if err != nil {
 		return nil, err
 	}
-	fmt.Println(r)
-	return r, nil
+	loc := &Data{}
+	log.Info(loc)
+	if err = json.Unmarshal(result, &loc); err != nil {
+		return nil, err
+	}
+	return loc, nil
 }
 
-// getCurrent gets the current weather for the provided location in
-// the units provided.
+// getCurrent gets the current weather for the provided location in the units provided.
 func getCurrent(l, u, lang string) (*owm.CurrentWeatherData, error) {
 	var apiKey = GetKey()
 
@@ -50,27 +54,28 @@ func getCurrent(l, u, lang string) (*owm.CurrentWeatherData, error) {
 		return nil, err
 	}
 	w.CurrentByName(l) // Get the actual data for the given location
-	fmt.Println(w)
 	return w, nil
 }
 
-// hereHandler will take are of requests coming in for the "/here" route.
-func hereHandler(w http.ResponseWriter, r *http.Request) {
-	location, err := getLocation()
+// GetHereHandler requested by IP API.
+func GetHereHandler() (*WeatherData, error) {
+	location, err := GetLocation()
 	if err != nil {
-		fmt.Fprint(w, http.StatusInternalServerError)
-		return
+		log.Fatalln(err)
+		return nil, err
 	}
 	wd, err := getCurrent(location.City, "C", "fr")
 	if err != nil {
-		fmt.Fprint(w, http.StatusInternalServerError)
-		return
+		log.Fatalln(err)
+		return nil, err
 	}
 
-	fmt.Println(wd)
+	weatherData := WeatherData{Main: &wd.Main}
+
+	return &weatherData, err
 }
 
-// FindWheatherByCity take the return of the dispatcher and request the requested location.
+// FindWheatherByCity requested by city.
 func FindWheatherByCity(wp *WeatherParams) *WeatherData {
 	var apiKey = GetKey()
 
@@ -82,7 +87,7 @@ func FindWheatherByCity(wp *WeatherParams) *WeatherData {
 	}
 	err = w.CurrentByName(wp.Location)
 
-	weatherData := WeatherData{Wheater: &w.Weather}
+	weatherData := WeatherData{Main: &w.Main}
 
 	return &weatherData
 }
@@ -93,13 +98,11 @@ type WeatherParams struct {
 }
 
 type WeatherData struct {
-	Wheater *[]owm.Weather
-	Main *owm.Weather
+	Main *owm.Main
 }
 
 func (wd *WeatherData) String() string {
-
-	return fmt.Sprintf("weather:%s", wd.Wheater)
+	return fmt.Sprintf("The temp is : %v and it's feels like : %v", wd.Main.Temp, wd.Main.FeelsLike)
 }
 
 // Data will hold the result of the query to get the IP
