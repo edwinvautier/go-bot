@@ -24,8 +24,9 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	analyzeCommand := commands.AnalyzeSentence{
 		Sentence: sentence,
 	}
-	analysis := analyzeCommand.ExecuteWitCommand().(*wit.Analysis)
-	log.WithFields( log.Fields{ "confidence": analysis.Intent[0].Confidence}).Info(analysis.Intent[0].Value)
+	var analysis *wit.Analysis
+	analysis = analyzeCommand.ExecuteWitCommand()
+	//log.WithFields( log.Fields{ "confidence": analysis.Intent[0].Confidence}).Info(analysis.Intent[0].Value)
 	if analysis == nil || len(analysis.Intent) < 1  {
 		s.ChannelMessageSend(m.ChannelID, "Pardon, je n'ai pas compris.")
 		return
