@@ -1,5 +1,7 @@
 # go-bot
 
+![Go](https://github.com/edwinvautier/go-bot/workflows/Go/badge.svg?branch=main)
+
 ⚠️ Work in progress ⚠️
 
 A bot to interact with in natural language.
@@ -61,6 +63,18 @@ Pull requests in this project follow two conventions, you will need to use the t
 If your pull request is still work in progress, please add "WIP: " (Work In Progress) in front of the title, therefor you inform the maintainers that your work is not done, and we can't merge it.
 
 The naming of the PR should follow the same rules as the [COMMIT_CONVENTIONS](COMMIT_CONVENTIONS.md)
+
+### Continuous Integration (CI)
+
+A CI pipeline is configured for this project and is accessible in the `.github/workflows/go-ci.yaml` file.
+
+The pipeline will run 3 different jobs:
+
+- Dependencies check
+- Linter
+- Tests
+
+The pipeline will be triggered automatically when creating a new **Pull Request** and on each **push** on it. It will also be triggered on push on `main` branch.
 
 ---
 
