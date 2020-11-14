@@ -47,7 +47,7 @@ func main() {
 }
 
 func initializeBot() (*discordgo.Session, error) {
-	discordToken, tokenExist := os.LookupEnv("DISCORD_TOKEN")
+	discordToken, tokenExist := os.LookupEnv("DISCORD_TOKEN_TEST")
 	if !tokenExist {
 		log.Fatal("Missing environment variable : DISCORD_TOKEN")
 	}

@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-type discordSessionMock struct {}
+type discordSessionMock struct{}
 
 func (session *discordSessionMock) ChannelMessageSend(channelID string, message string) (*discordgo.Message, error) {
 	return nil, nil
@@ -21,10 +21,10 @@ func TestCommandBuilder(t *testing.T) {
 	}
 
 	discordMock := discordSessionMock{}
-	discordMessage := discordgo.Message {
+	discordMessage := discordgo.Message{
 		ChannelID: "1",
 	}
-	discordMessageCreate := discordgo.MessageCreate {
+	discordMessageCreate := discordgo.MessageCreate{
 		&discordMessage,
 	}
 	tests := []struct {
@@ -98,7 +98,12 @@ func TestCommandBuilder(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, err := commands.Build(tt.args.a, tt.args.s, tt.args.m); (err != nil) != tt.wantErr {
+			genericCommand := commands.GenericCommand{
+				Analysis: tt.args.a,
+				Session:  tt.args.s,
+				Message:  tt.args.m,
+			}
+			if _, err := genericCommand.Build(); (err != nil) != tt.wantErr {
 				t.Errorf("Build() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

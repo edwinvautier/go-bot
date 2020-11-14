@@ -6,25 +6,33 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/wit"
 	"github.com/edwinvautier/go-bot/connectors"
-	// log "github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
+// GenericCommand is the structure needed for every command.
+// All Commands implements it.
+type GenericCommand struct {
+	Analysis *wit.Analysis
+	Session  connectors.Discord
+	Message  *discordgo.MessageCreate
+}
+
 // Build a command depending on the analysis result we give
-func Build(a *wit.Analysis, s connectors.Discord, m *discordgo.MessageCreate) (Command, error) {
-	if len(a.Intent) == 0 || a.Intent[0].Value == "" {
+func (gc *GenericCommand) Build() (Command, error) {
+	if len(gc.Analysis.Intent) == 0 || gc.Analysis.Intent[0].Value == "" {
 		return nil, errors.New("Missing fields in analysis")
 	}
 
 	// Read the intent from the wit analysis result
-	intentString := a.Intent[0].Value
+	intentString := gc.Analysis.Intent[0].Value
 
 	switch intentString {
 	case "listen":
-		return QueryYoutubeVideoCommand{analysis: a, connector: s, message: m}, nil
-	// case "meteo":
-	// 	log.Info("You want the meteo")
+		return QueryYoutubeVideoCommand{gc: gc}, nil
+	case "meteo":
+		log.Info("You want the meteo")
 	default:
-		return QueryGoogleCommand{Connector: s, Message: m}, nil
+		return QueryGoogleCommand{Connector: gc.Session, Message: gc.Message}, nil
 	}
 
 	return nil, nil
