@@ -11,6 +11,7 @@ Made with :
 - [go](https://github.com/golang/go)
 - [dicordgo](https://github.com/bwmarrin/discordgo)
 - [wit AI](https://wit.ai/)
+- [youtube api v3](https://developers.google.com/youtube/v3)
 
 ## Setup
 
@@ -20,6 +21,8 @@ The `DISCORD_TOKEN` variable is the discord bot token. It's needed in order to m
 You can get a token by following [this link](https://discord.com/developers/applications/)
 
 We use wit.ai to understand natural language, a token is also needed as `WIT_TOKEN`
+
+We also use youtube api to search for musics or videos, a token is needed as `YOUTUBE_TOKEN` and can be created in google's applications admin console.
 
 ```sh
   docker-compose up --build
