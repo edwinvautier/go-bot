@@ -16,10 +16,10 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if !strings.HasPrefix(m.Content, "assistant,") {
+	if !strings.HasPrefix(strings.ToLower(m.Content), "assistant,") {
 		return
 	}
-	sentence := strings.Split(m.Content, "assistant,")[1]
+	sentence := strings.Split(strings.ToLower(m.Content), "assistant,")[1]
 
 	analyzeCommand := commands.AnalyzeSentence{
 		Sentence: sentence,

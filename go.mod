@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go v0.71.0 // indirect
 	github.com/PuerkitoBio/goquery v1.6.0
 	github.com/antchfx/xmlquery v1.3.3 // indirect
+	github.com/briandowns/openweathermap v0.16.0
 	github.com/bwmarrin/discordgo v0.22.0
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gocolly/colly/v2 v2.1.0 // indirect
