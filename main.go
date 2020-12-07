@@ -36,6 +36,9 @@ func main() {
 	if err != nil {
 		log.Fatal("Error initializing discord API connection.")
 	}
+
+	// ----------------- CLOSE APP -----------------
+
 	// Wait here until CTRL-C or other term signal is received.
 	log.Info("Bot is now running.  Press CTRL-C to exit.")
 	sc := make(chan os.Signal, 1)
