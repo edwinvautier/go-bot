@@ -2,8 +2,6 @@
 
 ![Go](https://github.com/edwinvautier/go-bot/workflows/Go/badge.svg?branch=main)
 
-⚠️ Work in progress ⚠️
-
 A bot to interact with in natural language.
 
 Made with :
