@@ -21,7 +21,11 @@ func (command QueryWeatherCommand) Execute() error {
 		wd, err := meteo.GetHereHandler()
 
 		if err != nil {
-			command.gc.Session.ChannelMessageSend(command.gc.Message.ChannelID, "Je sais pas compris, vous n'exister pas")
+			_, err = command.gc.Session.ChannelMessageSend(command.gc.Message.ChannelID, "Je sais pas compris, vous n'exister pas")
+			if err != nil {
+				log.Error("sendMessageErr: ", err)
+			}
+
 			return errors.New("Could not retrieve location")
 		}
 
