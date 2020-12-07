@@ -14,6 +14,12 @@ Made with :
 - [youtube api v3](https://developers.google.com/youtube/v3)
 - [OpenWeather API](https://openweathermap.org)
 
+## Demo
+
+![google search](./assets/google.gif)
+
+![music search](./assets/marley.gif)
+
 ## Setup
 
 First you need to created your `.env` file (you can use the .env.dist file).
