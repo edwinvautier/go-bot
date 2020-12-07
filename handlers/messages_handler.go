@@ -25,31 +25,42 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Sentence: sentence,
 	}
 	var analysis *wit.Analysis
+
+	// Call to wit to analyze sentence intents
 	analysis = analyzeCommand.ExecuteWitCommand()
-	//log.WithFields( log.Fields{ "confidence": analysis.Intent[0].Confidence}).Info(analysis.Intent[0].Value)
 	if analysis == nil || len(analysis.Intent) < 1  {
-		s.ChannelMessageSend(m.ChannelID, "Pardon, je n'ai pas compris.")
+		_, err := s.ChannelMessageSend(m.ChannelID, "Pardon, je n'ai pas compris.")
+		
+		if err != nil {
+			log.Error("sendMessageErr: ", err)
+		}
 		return
 	}
 
-	// Check the confidence
+	// If not enough confidence in user intent, ask google command
 	if analysis.Intent[0].Confidence < 0.9 {
 		askGoogle(s, m)
 		return
 	}
 
+	// Else call command builder for the intent detected
 	gc := commands.GenericCommand{Analysis: analysis, Session: s, Message: m}
 	cmd, err := gc.Build()
 	
 	if err != nil {
 		log.Error(err)
-		s.ChannelMessageSend(m.ChannelID, "Je n'ai pas réussi à trouver ce qu'il vous fallait.")
+		_, err := s.ChannelMessageSend(m.ChannelID, "Je n'ai pas réussi à trouver ce qu'il vous fallait.")
+
+		if err != nil {
+			log.Error("sendMessageErr: ", err)
+		}
 		return
 	}
 	if cmd == nil {
 		return
 	}
 	
+	// If error during command creation, fallback solution is google command
 	if err = cmd.Execute(); err != nil {
 		askGoogle(s, m)
 		return
@@ -57,12 +68,22 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func askGoogle(s *discordgo.Session, m *discordgo.MessageCreate) {
-	s.ChannelMessageSend(m.ChannelID, "Je n'ai pas très bien compris, je demande a google.")
-		googleCmd := commands.QueryGoogleCommand{Connector: s, Message: m}
-		err := googleCmd.Execute()
+	_, err := s.ChannelMessageSend(m.ChannelID, "Je n'ai pas très bien compris, je demande a google.")
+	if err != nil {
+		log.Error("sendMessageErr: ", err)
+	}
+
+	// Execute command to get results from google search browser
+	googleCmd := commands.QueryGoogleCommand{Connector: s, Message: m}
+	err = googleCmd.Execute()
+
+	// Handle eventual errors
+	if err != nil {
+		log.Error(err)
+		_, err := s.ChannelMessageSend(m.ChannelID, "Pardon, même google m'a abandonné.")
 
 		if err != nil {
-			log.Error(err)
-			s.ChannelMessageSend(m.ChannelID, "Pardon, même google m'a abandonné.")
+			log.Error("sendMessageErr: ", err)
 		}
+	}
 }

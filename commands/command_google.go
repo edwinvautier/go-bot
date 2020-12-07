@@ -3,7 +3,7 @@ package commands
 import (
 	"errors"
 	"strings"
-
+	log "github.com/sirupsen/logrus"
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/google"
 	"github.com/edwinvautier/go-bot/connectors"
@@ -29,13 +29,21 @@ func (command QueryGoogleCommand) Execute() error {
 	}
 
 	// Loop inside results and display only the URL inside discord
-	command.Connector.ChannelMessageSend(command.Message.ChannelID, "Voilà ce que j'ai trouvé : ")
+	_, err = command.Connector.ChannelMessageSend(command.Message.ChannelID, "Voilà ce que j'ai trouvé : ")
+	if err != nil {
+		log.Error("sendMessageErr: ", err)
+	}
+
+	// Send to user the first 3 results
 	count := 1
 	for _, result := range results {
 		if count > 3 {
 			break
 		}
-		command.Connector.ChannelMessageSend(command.Message.ChannelID, result.URL)
+		_, err = command.Connector.ChannelMessageSend(command.Message.ChannelID, result.URL)
+		if err != nil {
+			log.Error("sendMessageErr: ", err)
+		}
 		count++
 	}
 
