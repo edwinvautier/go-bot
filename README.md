@@ -12,6 +12,7 @@ Made with :
 - [dicordgo](https://github.com/bwmarrin/discordgo)
 - [wit AI](https://wit.ai/)
 - [youtube api v3](https://developers.google.com/youtube/v3)
+- [OpenWeather API](https://openweathermap.org)
 
 ## Setup
 
@@ -23,6 +24,9 @@ You can get a token by following [this link](https://discord.com/developers/appl
 We use wit.ai to understand natural language, a token is also needed as `WIT_TOKEN`
 
 We also use youtube api to search for musics or videos, a token is needed as `YOUTUBE_TOKEN` and can be created in google's applications admin console.
+
+Finally, to get the weather informations our API uses OpenWeather. [Get your API token](https://openweathermap.org/api) and save it in .env as `OWN_API_KEY`.
+
 
 ```sh
   docker-compose up --build
