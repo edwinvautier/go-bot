@@ -79,7 +79,6 @@ func GetHereHandler() (*WeatherData, error) {
 func FindWheatherByCity(wp *WeatherParams) *WeatherData {
 	var apiKey = GetKey()
 
-	log.Info("Recherche du temps")
 	w, err := owm.NewCurrent("C", "fr", apiKey) // Celsius (metric) with France output
 	if err != nil {
 		log.Fatalln(err)
@@ -97,6 +96,7 @@ type WeatherParams struct {
 	Location string
 }
 
+// WeatherData result
 type WeatherData struct {
 	Main *owm.Main
 }

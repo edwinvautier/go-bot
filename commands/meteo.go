@@ -10,7 +10,6 @@ import (
 
 	"github.com/edwinvautier/go-bot/apis/wit"
 	log "github.com/sirupsen/logrus"
-	// Shortening the import reference name seems to make it a bit easier
 )
 
 type GetWeather struct {
@@ -19,6 +18,7 @@ type GetWeather struct {
 	message   *discordgo.MessageCreate
 }
 
+// Execute command to get results from api weather
 func (command GetWeather) Execute() error {
 	location := command.analysis.Location
 
@@ -34,16 +34,14 @@ func (command GetWeather) Execute() error {
 		return nil
 	}
 
-	// oui je continue et je créé ma WeatherParams
-	log.Info("You want the meteo in : ", location)
-
 	weatherParams := meteo.WeatherParams{Location: location[0].Value}
 
-	// Je renvoie un message
+
 	wd := meteo.FindWheatherByCity(&weatherParams)
 	log.Info(wd)
-	command.connector.ChannelMessageSend(command.message.ChannelID, fmt.Sprintf("Voici la météo : %s", wd))
-
-	// Potentiellement je renvoie des erreurs à plusieurs endroits
+	_, err := command.connector.ChannelMessageSend(command.message.ChannelID, fmt.Sprintf("Voici la météo : %s", wd))
+	if err != nil {
+		log.Error("sendMessageErr: ", err)
+	}
 	return nil
 }
