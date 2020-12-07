@@ -21,7 +21,7 @@ func (command QueryWeatherCommand) Execute() error {
 		wd, err := meteo.GetHereHandler()
 
 		if err != nil {
-			_, err = command.gc.Session.ChannelMessageSend(command.gc.Message.ChannelID, "Je sais pas compris, vous n'exister pas")
+			_, err = command.gc.Session.ChannelMessageSend(command.gc.Message.ChannelID, "Je n'ai pas compris, vous n'existez pas")
 			if err != nil {
 				log.Error("sendMessageErr: ", err)
 			}

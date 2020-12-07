@@ -27,7 +27,6 @@ We also use youtube api to search for musics or videos, a token is needed as `YO
 
 Finally, to get the weather informations our API uses OpenWeather. [Get your API token](https://openweathermap.org/api) and save it in .env as `OWN_API_KEY`.
 
-
 ```sh
   docker-compose up --build
 ```
