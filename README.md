@@ -49,7 +49,13 @@ You can run tests suites by using the following command :
 
 ## Usage
 
-Once the bot is invited to discord, you can talk to it simply by prefixing your messages with : `assistant,`
+Once the bot is invited to discord, you can talk to it simply by prefixing your messages with : `assistant,`.
+
+The bot is able to :
+
+- find musics, ex: `assistant, fais moi écouter du Mickael Jackson`
+- give the weather, ex: `assistant, fait il beau à Paris`
+- search on google, ex: `assistant, comment faire un noeud de chaise`
 
 ---
 
