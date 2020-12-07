@@ -28,7 +28,11 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	analysis = analyzeCommand.ExecuteWitCommand()
 	//log.WithFields( log.Fields{ "confidence": analysis.Intent[0].Confidence}).Info(analysis.Intent[0].Value)
 	if analysis == nil || len(analysis.Intent) < 1  {
-		s.ChannelMessageSend(m.ChannelID, "Pardon, je n'ai pas compris.")
+		_, err := s.ChannelMessageSend(m.ChannelID, "Pardon, je n'ai pas compris.")
+		
+		if err != nil {
+			log.Error("sendMessageErr: ", err)
+		}
 		return
 	}
 
@@ -43,7 +47,11 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	
 	if err != nil {
 		log.Error(err)
-		s.ChannelMessageSend(m.ChannelID, "Je n'ai pas réussi à trouver ce qu'il vous fallait.")
+		_, err := s.ChannelMessageSend(m.ChannelID, "Je n'ai pas réussi à trouver ce qu'il vous fallait.")
+
+		if err != nil {
+			log.Error("sendMessageErr: ", err)
+		}
 		return
 	}
 	if cmd == nil {
@@ -57,12 +65,20 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func askGoogle(s *discordgo.Session, m *discordgo.MessageCreate) {
-	s.ChannelMessageSend(m.ChannelID, "Je n'ai pas très bien compris, je demande a google.")
-		googleCmd := commands.QueryGoogleCommand{Connector: s, Message: m}
-		err := googleCmd.Execute()
+	_, err := s.ChannelMessageSend(m.ChannelID, "Je n'ai pas très bien compris, je demande a google.")
+	if err != nil {
+		log.Error("sendMessageErr: ", err)
+	}
+	
+	googleCmd := commands.QueryGoogleCommand{Connector: s, Message: m}
+	err = googleCmd.Execute()
+
+	if err != nil {
+		log.Error(err)
+		_, err := s.ChannelMessageSend(m.ChannelID, "Pardon, même google m'a abandonné.")
 
 		if err != nil {
-			log.Error(err)
-			s.ChannelMessageSend(m.ChannelID, "Pardon, même google m'a abandonné.")
+			log.Error("sendMessageErr: ", err)
 		}
+	}
 }
