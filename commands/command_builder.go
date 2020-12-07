@@ -6,7 +6,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/edwinvautier/go-bot/apis/wit"
 	"github.com/edwinvautier/go-bot/connectors"
-	log "github.com/sirupsen/logrus"
 )
 
 // GenericCommand is the structure needed for every command.
@@ -30,7 +29,7 @@ func (gc *GenericCommand) Build() (Command, error) {
 	case "listen":
 		return QueryYoutubeVideoCommand{gc: gc}, nil
 	case "meteo":
-		return GetWeather{analysis: a, connector: s, message: m}, nil
+		return QueryWeatherCommand{gc: gc}, nil
 	default:
 		return QueryGoogleCommand{Connector: gc.Session, Message: gc.Message}, nil
 	}

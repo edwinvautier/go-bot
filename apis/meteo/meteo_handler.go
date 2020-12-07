@@ -1,6 +1,7 @@
 package meteo
 
 import (
+	"strings"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -8,8 +9,6 @@ import (
 	"os"
 
 	log "github.com/sirupsen/logrus"
-
-	// Shortening the import reference name seems to make it a bit easier
 	owm "github.com/briandowns/openweathermap"
 )
 
@@ -38,7 +37,6 @@ func GetLocation() (*Data, error) {
 		return nil, err
 	}
 	loc := &Data{}
-	log.Info(loc)
 	if err = json.Unmarshal(result, &loc); err != nil {
 		return nil, err
 	}
@@ -84,7 +82,8 @@ func FindWheatherByCity(wp *WeatherParams) *WeatherData {
 		log.Fatalln(err)
 		return nil
 	}
-	err = w.CurrentByName(wp.Location)
+	
+	err = w.CurrentByName(strings.ToLower(wp.Location))
 
 	weatherData := WeatherData{Main: &w.Main}
 
@@ -102,7 +101,7 @@ type WeatherData struct {
 }
 
 func (wd *WeatherData) String() string {
-	return fmt.Sprintf("The temp is : %v and it's feels like : %v", wd.Main.Temp, wd.Main.FeelsLike)
+	return fmt.Sprintf("Température : %v°C \n Ressenti: %v°C", wd.Main.Temp, wd.Main.FeelsLike)
 }
 
 // Data will hold the result of the query to get the IP
