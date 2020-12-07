@@ -25,8 +25,9 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Sentence: sentence,
 	}
 	var analysis *wit.Analysis
+
+	// Call to wit to analyze sentence intents
 	analysis = analyzeCommand.ExecuteWitCommand()
-	//log.WithFields( log.Fields{ "confidence": analysis.Intent[0].Confidence}).Info(analysis.Intent[0].Value)
 	if analysis == nil || len(analysis.Intent) < 1  {
 		_, err := s.ChannelMessageSend(m.ChannelID, "Pardon, je n'ai pas compris.")
 		
@@ -36,12 +37,13 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	// Check the confidence
+	// If not enough confidence in user intent, ask google command
 	if analysis.Intent[0].Confidence < 0.9 {
 		askGoogle(s, m)
 		return
 	}
 
+	// Else call command builder for the intent detected
 	gc := commands.GenericCommand{Analysis: analysis, Session: s, Message: m}
 	cmd, err := gc.Build()
 	
@@ -58,6 +60,7 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 	
+	// If error during command creation, fallback solution is google command
 	if err = cmd.Execute(); err != nil {
 		askGoogle(s, m)
 		return
@@ -69,10 +72,12 @@ func askGoogle(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if err != nil {
 		log.Error("sendMessageErr: ", err)
 	}
-	
+
+	// Execute command to get results from google search browser
 	googleCmd := commands.QueryGoogleCommand{Connector: s, Message: m}
 	err = googleCmd.Execute()
 
+	// Handle eventual errors
 	if err != nil {
 		log.Error(err)
 		_, err := s.ChannelMessageSend(m.ChannelID, "Pardon, même google m'a abandonné.")

@@ -34,6 +34,7 @@ func (command QueryGoogleCommand) Execute() error {
 		log.Error("sendMessageErr: ", err)
 	}
 
+	// Send to user the first 3 results
 	count := 1
 	for _, result := range results {
 		if count > 3 {
